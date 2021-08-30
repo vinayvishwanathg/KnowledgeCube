@@ -13,7 +13,6 @@
   },
   "author": "wishvamadushanka1997@gmail.com",
   "license": "ISC",
-
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.0.0",
@@ -21,7 +20,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "googleapis": "^67.1.1",
+    "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.11",
     "mongoose": "^5.11.13",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.17"
@@ -29,7 +30,6 @@
   "devDependencies": {
     "nodemon": "^2.0.7"
   },
-
   "bugs": {
     "url": "https://github.com/wishvamadushanka/Online-Learning-Platform/issues"
   },
