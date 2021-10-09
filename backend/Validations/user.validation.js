@@ -21,7 +21,7 @@ userValidation.student = async function (req, res, next) {
       userName: req.body.userName,
       password: req.body.password,
       email: req.body.email,
-      phone: req.body.phone,
+      isTeacher: false
     });
     console.log("[+] Validation Success...");
     logger.debug("[+] Validation success...");

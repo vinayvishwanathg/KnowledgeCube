@@ -8,11 +8,7 @@ const mongoose = require("mongoose");
 
 const dotenv = require("dotenv").config();
 
-
-
-var getIP = require('ipware')().get_ip;
-
-
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 if (dotenv.error) {
   throw dotenv.error;
@@ -20,6 +16,14 @@ if (dotenv.error) {
 
 //init express
 const app = express();
+
+
+var getIP = require('ipware')().get_ip;
+app.use((req, res, next) => {
+  var ipInfo = getIP(req);
+  logger.info("Request by : " + ipInfo.clientIp + " >>>> To : " + req.originalUrl);
+  next();
+});
 
 //server initiating
 const ser = http
@@ -29,20 +33,20 @@ const ser = http
     logger.debug("Server listning.");
   });
 
-//data base
-// const db = mongoose
-//   .connect(process.env.DB_CONNECT, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-//   })
-//   .then(() => {
-//     console.log("Connected to the db...");
-//   })
-//   .catch((error) => {
-//     console.log("Failed to connect db...", error);
+// data base
+const db = mongoose
+  .connect(process.env.DB_CONNECT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    console.log("Connected to the db...");
+  })
+  .catch((error) => {
+    console.log("Failed to connect db...", error);
 
-//   });
+  });
 
 
 //middleware
@@ -52,7 +56,7 @@ app.use(express.json());
 const signUp = require("./Routes/signUp.routes");
 app.use('/signUp', signUp);
 
-app.use(function(req, res, next) {
+app.use('/ip', function(req, res, next) {
   var ipInfo = getIP(req);
   console.log(ipInfo);
   // { clientIp: '127.0.0.1', clientIpRoutable: false }
@@ -62,7 +66,8 @@ app.use(function(req, res, next) {
 // 404 route
 app.use((req, res) => {
   console.log("[-] unknown path...");
-  logger.info("Request : " + req.originalUrl);
+  var ipInfo = getIP(req);
+  logger.info("Request by : " + ipInfo.clientIp + " >>>> To : " + req.originalUrl);
   res.status(404).send("Not found");
 });
 

@@ -19,12 +19,6 @@ const userSchema = new Schema(
       },
     },
 
-    phone: {
-      type: String,
-      min: 10,
-      max: 10,
-    },
-
     isTeacher: {
       type: Boolean,
       default: false,
