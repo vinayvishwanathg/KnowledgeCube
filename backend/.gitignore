@@ -2,6 +2,9 @@ node_modules/
 .env
 logs/
 
+images
+
+*.mp4
 
 
 
