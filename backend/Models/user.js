@@ -38,6 +38,11 @@ const userSchema = new Schema(
       min: 5,
       max: 60,
     },
+
+    verify: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
