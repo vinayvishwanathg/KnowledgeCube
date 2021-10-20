@@ -17,6 +17,11 @@ router.post("/student", studentController.signUp, (req, res) => {
 
 });
 
+router.post("/student/verifyEmail/:token", studentController.signUpEmailVerify, (req, res) => {
+  res.status(200).send("fine");
+
+});
+
 router.use((req, res) => {
   console.log("[-] unknown path to /signUp ...");
   
