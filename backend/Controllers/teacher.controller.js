@@ -6,9 +6,9 @@ const userModel = require("../Models/user");
 
 const sendMail = require("./email.controller").sendMail;
 
-const studentController = (exports.studentController = {});
+const teacherController = (exports.teacherController = {});
 
-studentController.signUp = async function (req, res) {
+teacherController.signUp = async function (req, res) {
   try {
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash(req.body.password, salt);
@@ -17,7 +17,7 @@ studentController.signUp = async function (req, res) {
       userName: req.body.userName,
       password: hashPassword,
       email: req.body.email,
-      isTeacher: false,
+      isTeacher: true,
     });
 
     await user
@@ -33,10 +33,10 @@ studentController.signUp = async function (req, res) {
           // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
           const verifUrlToken = jwt.sign(
             payload,
-            process.env.STUDENT_LOGIN_VARIFICATION_TOKEN,
+            process.env.TEACHER_LOGIN_VARIFICATION_TOKEN,
             { expiresIn: "10m" }
           );
-          const verifUrl = `http://localhost:3000/signUp/student/verifyEmail/${verifUrlToken}`;
+          const verifUrl = `http://localhost:3000/signUp/teacher/verifyEmail/${verifUrlToken}`;
 
           sendMail
             .UserMailVerification(user.email, verifUrl)
@@ -71,7 +71,7 @@ studentController.signUp = async function (req, res) {
   }
 };
 
-studentController.signUpResendMail = async function (req, res) {
+teacherController.signUpResendMail = async function (req, res) {
   try {
     userModel.findOne({ email: req.body.email }, async (err, userinfo) => {
       if (err) {
@@ -94,10 +94,10 @@ studentController.signUpResendMail = async function (req, res) {
             // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
             const verifyUrlToken = jwt.sign(
               payload,
-              process.env.STUDENT_LOGIN_VARIFICATION_TOKEN,
+              process.env.TEACHER_LOGIN_VARIFICATION_TOKEN,
               { expiresIn: "10m" }
             );
-            const verifUrl = `http://localhost:3000/signUp/student/verifyEmail/${verifyUrlToken}`;
+            const verifUrl = `http://localhost:3000/signUp/teacher/verifyEmail/${verifyUrlToken}`;
             console.log(verifUrl);
             // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
             sendMail
@@ -126,11 +126,11 @@ studentController.signUpResendMail = async function (req, res) {
   }
 };
 
-studentController.signUpEmailVerify = async function (req, res) {
+teacherController.signUpEmailVerify = async function (req, res) {
   try {
     jwt.verify(
       req.params.token,
-      process.env.STUDENT_LOGIN_VARIFICATION_TOKEN,
+      process.env.TEACHER_LOGIN_VARIFICATION_TOKEN,
       (err, tokenInfo) => {
         if (err)
           res.status(401).json({
@@ -171,10 +171,3 @@ studentController.signUpEmailVerify = async function (req, res) {
     });
   }
 };
-
-
-
-//vedio handeler
-studentController.stream = async function(req, res){
-  
-}
