@@ -4,7 +4,7 @@ var logger = require("../Controllers/logger").Logger;
 
 var userValidation = (exports.userValidation = {});
 
-const studentSchema = joi.object({
+const userSchema = joi.object({
   userName: joi.string().alphanum().min(5).max(1024).required(),
   password: joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   email: joi.string().email({
@@ -17,7 +17,7 @@ const studentSchema = joi.object({
 
 userValidation.student = async function (req, res, next) {
   try {
-    const value = await studentSchema.validateAsync({
+    const value = await userSchema.validateAsync({
       userName: req.body.userName,
       password: req.body.password,
       email: req.body.email,
@@ -31,3 +31,21 @@ userValidation.student = async function (req, res, next) {
     logger.error("Validation Error : " + err);
   }
 };
+
+userValidation.teacher = async function (req, res, next) {
+  try {
+    const value = await userSchema.validateAsync({
+      userName: req.body.userName,
+      password: req.body.password,
+      email: req.body.email,
+      isTeacher: true
+    });
+    console.log("[+] Validation Success...");
+    logger.debug("[+] Validation success...");
+    next();
+  } catch (err) {
+    console.log("[-] Error in Validation : " + err);
+    logger.error("Validation Error : " + err);
+  }
+};
+
