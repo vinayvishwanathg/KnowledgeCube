@@ -1,0 +1,12 @@
+node_modules/
+.env
+logs/
+
+images
+
+*.mp4
+
+
+
+test.js
+test2.html
