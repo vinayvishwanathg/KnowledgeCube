@@ -3,7 +3,7 @@ node_modules/
 logs/
 
 images
-vedio
+vedio/
 Routes/*.html
 
 *.mp4
