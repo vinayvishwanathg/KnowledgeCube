@@ -22,7 +22,7 @@ streamController.vedioStream = async function (req, res, next) {
       res.status(400).send("Missed Range header or Vedio File name...");
     } else {
       try {
-        const vedioName = "./vedio/" + vedioFileName; // + "./images/woshika.webm"
+        const vedioName = "./vedios/" + vedioFileName; // + "./images/woshika.webm"
         // get video stats (about 61MB)
         const videoPath = vedioName;
         const videoSize = fs.statSync(vedioName).size;
@@ -67,12 +67,19 @@ streamController.vedioStream = async function (req, res, next) {
 
 streamController.sendVedioFile = async function (req, res, next) {
   try {
-    const vedioName = "woshika.webm"; // req.body.vedioName; // = "../images/woshika.webm";
-    var fileName = "../vedio/" + vedioName;
-    var filePath = path.join(__dirname, fileName);
-    console.log("[+] sending vedio file...");
-    res.sendFile(filePath);
-    // res.sendFile(path.resolve(req.body.vedioName), { root: __dirname });
+    const vedioName = req.body.vedioName; // = "../images/woshika.webm";
+    if (vedioName) {
+      var fileName = "../vedios/" + vedioName;
+      var filePath = path.join(__dirname, fileName);
+      console.log("[+] send vedio file...");
+      res.sendFile(filePath);
+      // res.sendFile(path.resolve(req.body.vedioName), { root: __dirname });
+    } else {
+      console.log("[-] No file name...");
+      res.status(400).json({
+        message: "send file name...",
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({
