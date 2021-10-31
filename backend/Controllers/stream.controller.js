@@ -72,12 +72,19 @@ streamController.sendVedioFile = async function (req, res, next) {
       var fileName = "../vedios/" + vedioName;
       var filePath = path.join(__dirname, fileName);
       console.log("[+] send vedio file...");
-      res.sendFile(filePath);
+      try {
+        res.sendFile(filePath);
+      } catch (error) {
+        console.log("[-] No vedio...");
+        res.status(400).json({
+          message: "send vedio name...",
+        });
+      }
       // res.sendFile(path.resolve(req.body.vedioName), { root: __dirname });
     } else {
-      console.log("[-] No file name...");
+      console.log("[-] No vedio name...");
       res.status(400).json({
-        message: "send file name...",
+        message: "send vedio name...",
       });
     }
   } catch (error) {
