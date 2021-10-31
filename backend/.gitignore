@@ -7,9 +7,6 @@ Files/
 vedios/
 Routes/*.html
 
-auth
-Controllers
-Middleware
 
 *.mp4
 
