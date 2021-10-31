@@ -7,38 +7,23 @@ const fs = require("fs");
 
 const multer = require("multer");
 
-const imageUploadController = (exports.imageUploadController = {});
+const fileUploadController = (exports.fileUploadController = {});
 
-var destination = "./images/";
-const imageStorage = multer.diskStorage({
+var destination = "./Files/";
+const fileStorage = multer.diskStorage({
   // Destination to store image req.user.id + 
   destination: (req, file, cb) => {
     cb(null, destination);
   },
   filename: (req, file, cb) => {
-    console.log("file");
+    // console.log("file");
     console.log(file);
     cb(null, file.originalname);
   },
 });
 
-imageUploadController.imageUpload = multer({
-  storage: imageStorage,
-  limits: {
-    fileSize: 100000000,
-  },
-  fileFilter(req, file, cb) {
-    console.log("file");
-    if (!file.originalname.match(/\.(mp4|webm)$/)) {
-      // upload only png and jpg format
-      return cb(new Error("Please upload a vedio"));
-    }
-    cb(undefined, true);
-  },
-}).single("image");
-
-imageUploadController.imagesUpload = multer({
-  storage: imageStorage,
+fileUploadController.fileUpload = multer({
+  storage: fileStorage,
   limits: {
     fileSize: 100000000,
   },
@@ -46,11 +31,26 @@ imageUploadController.imagesUpload = multer({
     console.log("file");
     if (!file.originalname.match(/\.(png|jpg|JPG|PDF|pdf)$/)) {
       // upload only png and jpg format
-      return cb(new Error("Please upload a vedios"));
+      return cb(new Error("Please upload a file"));
     }
     cb(undefined, true);
   },
-}).array('images', 8);
+}).single("file");
+
+fileUploadController.filesUpload = multer({
+  storage: fileStorage,
+  limits: {
+    fileSize: 100000000,
+  },
+  fileFilter(req, file, cb) {
+    // console.log("file");
+    if (!file.originalname.match(/\.(png|jpg|JPG|PDF|pdf)$/)) {
+      // upload only png and jpg format
+      return cb(new Error("Please upload a files"));
+    }
+    cb(undefined, true);
+  },
+}).array('files', 8);
 
 // imageUploadController.imageUpload = async function (req, res, next) {
 //   //   var destination = req.user.email + "images";
