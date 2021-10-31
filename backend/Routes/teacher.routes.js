@@ -17,6 +17,9 @@ const streamController = require("../Controllers/stream.controller").streamContr
 //image upload controller
 const fileUploadController = require("../Controllers/fileUpload.controller").fileUploadController;
 
+//vedio upload controller
+const vedioUploadController = require("../Controllers/vedioUpload.controller").vedioUploadController;
+
 
 // //logging end point for student
 // router.post(
@@ -46,8 +49,8 @@ router.get("/course/watchVedio/Online", streamController.vedioStream);
 //stream vedio authenticate.userAuthenticateToken,
 router.get("/course/watchVedio/Offline", streamController.sendVedioFile);
 
-//upload image
-router.post("course/upload/file", fileUploadController.fileUpload, (req, res) => {
+//upload file
+router.post("/course/upload/file", fileUploadController.fileUpload, (req, res) => {
     console.log("[+] successfully uploaded file...");
     res.send(req.file)
  }, (error, req, res, next) => {
@@ -55,19 +58,38 @@ router.post("course/upload/file", fileUploadController.fileUpload, (req, res) =>
      res.status(400).send({ error: error.message })
  });
 
- //upload images
-router.post("course/upload/files", fileUploadController.filesUpload, (req, res) => {
+ //upload files
+router.post("/course/upload/files", fileUploadController.filesUpload, (req, res) => {
     console.log("[+] successfully uploaded files...");
-    res.send(req.file)
+    res.send(req.files)
  }, (error, req, res, next) => {
     console.log("[-] failed uploaded files...", error);
      res.status(400).send({ error: error.message })
  });
 
+ //upload vedio
+router.post("/course/upload/vedio", vedioUploadController.vedioUpload, (req, res) => {
+    console.log("[+] successfully uploaded vedio...");
+    res.send(req.file)
+ }, (error, req, res, next) => {
+    console.log("[-] failed uploaded vedio...", error);
+     res.status(400).send({ error: error.message })
+ });
+
+ //upload vedios
+router.post("/course/upload/vedios", vedioUploadController.vediosUpload, (req, res) => {
+    console.log("[+] successfully uploaded vedios...");
+    res.send(req.files)
+ }, (error, req, res, next) => {
+    console.log("[-] failed uploaded vedios...", error);
+     res.status(400).send({ error: error.message })
+ });
+
+
 
 //404
 router.use((req, res) => {
-  console.log("[-] unknown path to /student routes ...");
+  console.log("[-] unknown path to /teacher routes ...", req.originalUrl);
 
   res.status(404).send("Not found");
 });

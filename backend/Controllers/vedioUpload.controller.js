@@ -16,7 +16,7 @@ const vedioStorage = multer.diskStorage({
     cb(null, destination);
   },
   filename: (req, file, cb) => {
-    console.log("file");
+    // console.log("file");
     console.log(file);
     cb(null, file.originalname);
   },
@@ -28,7 +28,7 @@ vedioUploadController.vedioUpload = multer({
     fileSize: 100000000,
   },
   fileFilter(req, file, cb) {
-    console.log("file");
+    // console.log("file");
     if (!file.originalname.match(/\.(mp4|webm)$/)) {
       // upload only png and jpg format
       return cb(new Error("Please upload a vedio"));
@@ -43,8 +43,8 @@ vedioUploadController.vediosUpload = multer({
     fileSize: 100000000,
   },
   fileFilter(req, file, cb) {
-    console.log("file");
-    if (!file.originalname.match(/\.(png|jpg|JPG|PDF|pdf)$/)) {
+    // console.log("file");
+    if (!file.originalname.match(/\.(mp4|webm)$/)) {
       // upload only png and jpg format
       return cb(new Error("Please upload a vedios"));
     }
