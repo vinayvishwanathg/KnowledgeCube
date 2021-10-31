@@ -61,7 +61,7 @@ teacherController.signUp = async function (req, res) {
       })
       .catch((error) => {
         res.status(400).json({
-          Error: "User cannot add",
+          Error: "User cannot signUp. Already SignUp...",
         });
       });
   } catch (error) {
@@ -171,3 +171,20 @@ teacherController.signUpEmailVerify = async function (req, res) {
     });
   }
 };
+
+
+//courseDetails
+//send course details
+teacherController.courseDetails = async function (req, res, next) {
+  res.status(200).json({
+    Error: "fine...",
+  });
+};
+
+//send course 
+teacherController.listAllCoureses = async function (req, res, next) {
+  res.status(200).json({
+    Error: "fine...",
+  });
+};
+

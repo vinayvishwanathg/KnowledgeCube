@@ -1,8 +1,12 @@
 node_modules/
 .env
-logs/
+Logs/
 
-images
+images/
+Files/
+vedios/
+Routes/*.html
+
 
 *.mp4
 

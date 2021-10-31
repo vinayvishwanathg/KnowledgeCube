@@ -13,33 +13,35 @@ authenticate.userAuthenticateBasic = async function (req, res, next) {
   const password = req.body.password;
   // console.log(req.body);
   userModel.findOne({ email: email }, async (err, userDataFromDB) => {
-    if (err)
+    if (err) {
+      console.log(err);
       res.status(500).json({
         Error: "DB Server faild",
       });
-    else {
+    } else {
       if (userDataFromDB) {
         if (userDataFromDB.verify) {
           try {
             // console.log('err');
             const passwordValid = await bcryptjs.compare(
               password,
-              userData.password
+              userDataFromDB.password
             );
             //console.log(passwordValid);
             if (!passwordValid) {
-              // console.log(!passwordValid);
+              console.log(!passwordValid);
               res.status(400).json({
                 Error: "Email or password wrong",
               });
             } else {
-              // const payload = {
-              //   user: {
-              //     id: userData._id,
-              //     isTeacher: userData.isTeacher,
-              //     userName: userData.userName
-              //   },
-              // };
+              const user = {
+                id: userDataFromDB._id,
+                isTeacher: userDataFromDB.isTeacher,
+                userName: userDataFromDB.userName,
+              };
+
+              req.user = user;
+              console.log("Success in basic authentication...");
 
               // const accessToken = getToken(payload);
               // //console.log(accessToken);
@@ -47,16 +49,15 @@ authenticate.userAuthenticateBasic = async function (req, res, next) {
               next();
             }
           } catch (err) {
-            //console.log('Errrrr');
+            console.log(err);
             res.status(401).json({
               Error: "Try again",
             });
           }
-        }
-        else{
-            res.status(400).json({
-                Error: "need to verify email",
-            });
+        } else {
+          res.status(400).json({
+            Error: "need to verify email",
+          });
         }
       } else {
         res.status(400).json({
@@ -68,35 +69,54 @@ authenticate.userAuthenticateBasic = async function (req, res, next) {
 };
 
 authenticate.userAuthenticateToken = async function (req, res, next) {
-  const token = req.headers["x-auth-token"];
-  if (token) {
-    jwt.verify(token, process.env.LOGIN_TOKEN, (err, userByToken) => {
-      if (err)
-        res.status(401).json({
-          Error: "Token not valid",
-        });
-      else {
-        userModel.findById(userByToken.user.id, async (err, dataFromDB) => {
-          if (err)
-            res.json({
-              Error: "Try again...",
-            });
-          else {
-            if (dataFromDB) {
-              req.user = {
-                id: dataFromDB._id,
-                isteacher: dataFromDB.isteacher,
-                email: dataFromDB.email,
-              };
-              next();
-            } else {
-              res.status(400).json({
-                Error: "Unauthorized",
+  try {
+    const token = req.headers["x-auth-token"];
+    console.log(token);
+    if (token) {
+      console.log("[+] Token valid...");
+      jwt.verify(token, process.env.LOGIN_TOKEN, (err, userByToken) => {
+        if (err) {
+          console.log("[-] Token not valid...");
+          res.status(401).json({
+            Error: "Token not valid",
+          });
+        } else {
+          userModel.findById(userByToken.id, async (err, dataFromDB) => {
+            if (err) {
+              console.log("[-] DB error", err);
+              res.json({
+                Error: "Try again...",
               });
+            } else {
+              if (dataFromDB) {
+                console.log("[+] user found from DB...");
+                req.user = {
+                  id: dataFromDB._id,
+                  isteacher: dataFromDB.isteacher,
+                  email: dataFromDB.email,
+                };
+                console.log("[+] set req...");
+                next();
+              } else {
+                console.log("[-] user is not in DB...");
+                res.status(400).json({
+                  Error: "Unauthorized",
+                });
+              }
             }
-          }
-        });
-      }
+          });
+        }
+      });
+    } else {
+      console.log("[-] Token is not found...");
+      res.status(400).json({
+        Error: "Unauthorized",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      Error: "Unauthorized",
     });
   }
 };

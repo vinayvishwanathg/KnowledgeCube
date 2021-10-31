@@ -61,7 +61,7 @@ studentController.signUp = async function (req, res) {
       })
       .catch((error) => {
         res.status(400).json({
-          Error: "User cannot add",
+          Error: "User cannot sign up. Alredy signUp...",
         });
       });
   } catch (error) {
@@ -172,9 +172,23 @@ studentController.signUpEmailVerify = async function (req, res) {
   }
 };
 
+//courseDetails
+//send course details
+studentController.courseDetails = async function (req, res, next) {
+  res.status(200).json({
+    Error: "fine...",
+  });
+};
+
+//send course 
+studentController.listAllCoureses = async function (req, res, next) {
+  res.status(200).json({
+    Error: "fine...",
+  });
+};
+
+// //vedio stream handeler
+// studentController.streamVedio = async function(req, res){
 
 
-//vedio handeler
-studentController.stream = async function(req, res){
-  
-}
+// }
