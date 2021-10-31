@@ -45,7 +45,7 @@ router.get("/course/watchVedio/Offline", streamController.sendVedioFile);
 
 //404
 router.use((req, res) => {
-  console.log("[-] unknown path to /student routes ...");
+  console.log("[-] unknown path to /student routes ...", req.originalUrl);
 
   res.status(404).send("Not found");
 });

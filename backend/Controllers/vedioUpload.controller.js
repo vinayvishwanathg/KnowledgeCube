@@ -25,7 +25,7 @@ const vedioStorage = multer.diskStorage({
 vedioUploadController.vedioUpload = multer({
   storage: vedioStorage,
   limits: {
-    fileSize: 100000000,
+    fileSize: 1000000000,
   },
   fileFilter(req, file, cb) {
     // console.log("file");
@@ -40,7 +40,7 @@ vedioUploadController.vedioUpload = multer({
 vedioUploadController.vediosUpload = multer({
   storage: vedioStorage,
   limits: {
-    fileSize: 100000000,
+    fileSize: 10000000000,
   },
   fileFilter(req, file, cb) {
     // console.log("file");
