@@ -9,7 +9,7 @@ const multer = require("multer");
 
 const imageUploadController = (exports.imageUploadController = {});
 
-var destination = "images/";
+var destination = "./images/";
 const imageStorage = multer.diskStorage({
   // Destination to store image req.user.id + 
   destination: (req, file, cb) => {
@@ -29,13 +29,28 @@ imageUploadController.imageUpload = multer({
   },
   fileFilter(req, file, cb) {
     console.log("file");
-    if (!file.originalname.match(/\.(png|jpg|JPG|PDF|pdf|mp4|webm)$/)) {
+    if (!file.originalname.match(/\.(mp4|webm)$/)) {
       // upload only png and jpg format
-      return cb(new Error("Please upload a Image"));
+      return cb(new Error("Please upload a vedio"));
     }
     cb(undefined, true);
   },
 }).single("image");
+
+imageUploadController.imagesUpload = multer({
+  storage: imageStorage,
+  limits: {
+    fileSize: 100000000,
+  },
+  fileFilter(req, file, cb) {
+    console.log("file");
+    if (!file.originalname.match(/\.(png|jpg|JPG|PDF|pdf)$/)) {
+      // upload only png and jpg format
+      return cb(new Error("Please upload a vedios"));
+    }
+    cb(undefined, true);
+  },
+}).array('images', 8);
 
 // imageUploadController.imageUpload = async function (req, res, next) {
 //   //   var destination = req.user.email + "images";

@@ -10,53 +10,67 @@ const multer = require("multer");
 const streamController = (exports.streamController = {});
 
 streamController.vedioStream = async function (req, res, next) {
-  // Ensure there is a range given for the video
-  const range = req.headers.range;
-  if (!range) {
-    res.status(400).send("Requires Range header");
-  }
   try {
-    req.body.vedioName = "./images/woshika.webm";
-    // get video stats (about 61MB)
-    const videoPath = req.body.vedioName;
-    const videoSize = fs.statSync(req.body.vedioName).size;
+    // Ensure there is a range given for the video
+    // const  vedioName= req.body.vedioName;
+    // console.log("h");
+    const range = req.headers.range;
+    // console.log(range);
+    const vedioFileName = "woshika.webm"; // req.body.vedioName;
+    if (!range || !vedioFileName) {
+      console.log("[-] Missed Range header or Vedio File name...");
+      res.status(400).send("Missed Range header or Vedio File name...");
+    } else {
+      try {
+        const vedioName = "./vedio/" + vedioFileName; // + "./images/woshika.webm"
+        // get video stats (about 61MB)
+        const videoPath = vedioName;
+        const videoSize = fs.statSync(vedioName).size;
 
-    // Parse Range
-    // Example: "bytes=32324-"
-    const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range.replace(/\D/g, ""));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+        // Parse Range
+        // Example: "bytes=32324-"
+        const CHUNK_SIZE = 10 ** 6; // 1MB
+        const start = Number(range.replace(/\D/g, ""));
+        const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
 
-    // Create headers
-    const contentLength = end - start + 1;
-    const headers = {
-      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
-      "Accept-Ranges": "bytes",
-      "Content-Length": contentLength,
-      "Content-Type": "video/mp4",
-    };
+        // Create headers
+        const contentLength = end - start + 1;
+        const headers = {
+          "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": contentLength,
+          "Content-Type": "video/mp4",
+        };
 
-    // HTTP Status 206 for Partial Content
-    res.writeHead(206, headers);
+        // HTTP Status 206 for Partial Content
+        res.writeHead(206, headers);
 
-    // create video read stream for this particular chunk
-    const videoStream = fs.createReadStream(videoPath, { start, end });
+        // create video read stream for this particular chunk
+        const videoStream = fs.createReadStream(videoPath, { start, end });
 
-    // Stream the video chunk to the client
-    videoStream.pipe(res);
+        // Stream the video chunk to the client
+        videoStream.pipe(res);
+      } catch (error) {
+        console.log(error);
+        res.status(400).json({
+          message: "Try again...",
+        });
+      }
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({
-      message: "Try again...",
+      message: "Error...",
     });
   }
 };
 
 streamController.sendVedioFile = async function (req, res, next) {
   try {
-    req.body.vedioName = "../images/woshika.webm";
-    var fileName = req.body.vedioName;
-    var filePath = path.join(__dirname, fileName)
+    const vedioName = "woshika.webm"; // req.body.vedioName; // = "../images/woshika.webm";
+    var fileName = "../vedio/" + vedioName;
+    var filePath = path.join(__dirname, fileName);
+    console.log("[+] sending vedio file...");
     res.sendFile(filePath);
     // res.sendFile(path.resolve(req.body.vedioName), { root: __dirname });
   } catch (error) {

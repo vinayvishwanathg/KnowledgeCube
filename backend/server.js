@@ -56,19 +56,34 @@ app.use(express.json());
 const signUp = require("./Routes/signUp.routes");
 app.use('/signUp', signUp);
 
-app.use('/ip', function(req, res, next) {
-  var ipInfo = getIP(req);
-  console.log(ipInfo);
-  // { clientIp: '127.0.0.1', clientIpRoutable: false }
-  next();
-});
+//logging routes
+const logging = require("./Routes/logging.routes");
+app.use('/logging', logging);
+
+//student routes
+const student = require("./Routes/student.routes");
+app.use('/student', student);
+
+//teacher routes
+const teacher = require("./Routes/teacher.routes");
+app.use('/teacher', teacher);
+
 
 // 404 route
 app.use((req, res) => {
-  console.log("[-] unknown path...");
+  console.log("[-] unknown path...", req.originalUrl);
   var ipInfo = getIP(req);
   logger.info("Request by : " + ipInfo.clientIp + " >>>> To : " + req.originalUrl);
   res.status(404).send("Not found");
 });
+
+
+// app.use('/ip', function(req, res, next) {
+//   var ipInfo = getIP(req);
+//   console.log(ipInfo);
+//   // { clientIp: '127.0.0.1', clientIpRoutable: false }
+//   next();
+// });
+
 
 

@@ -8,38 +8,41 @@ var logger = require("../Controllers/logger").Logger;
 //student controller
 const studentController = require("../Controllers/student.controller").studentController;
 
+//validation
+const userValidation = require("../Validations/user.validation").userValidation;
+
 //teacher controller
 const teacherController = require("../Controllers/teacher.controller").teacherController;
 
-//, studentController.signUp userValidation.student
-router.post("/student", studentController.signUp, (req, res) => {
+// user student sign up, studentController.signUp userValidation.student
+router.post("/student", userValidation.student, studentController.signUp, (req, res) => {
+  // res.status(200).send("Sign up Success...");
+
+});
+
+router.post("/student/resendVerifyEmail", studentController.signUpResendMail, (req, res) => {
   res.status(200).send("fine");
 
 });
 
-router.post("/student/verifyEmail", studentController.signUpResendMail, (req, res) => {
-  res.status(200).send("fine");
-
-});
-
-router.post("/student/verifyEmail/:token", studentController.signUpEmailVerify, (req, res) => {
+router.get("/student/verifyEmail/:token", studentController.signUpEmailVerify, (req, res) => {
   res.status(200).send("fine");
 
 });
 
 
 //teacher
-router.post("/teacher", teacherController.signUp, (req, res) => {
+router.post("/teacher", userValidation.teacher, teacherController.signUp, (req, res) => {
   res.status(200).send("fine");
 
 });
 
-router.post("/teacher/verifyEmail", teacherController.signUpResendMail, (req, res) => {
+router.post("/teacher/resendVerifyEmail", teacherController.signUpResendMail, (req, res) => {
   res.status(200).send("fine");
 
 });
 
-router.post("/teacher/verifyEmail/:token", teacherController.signUpEmailVerify, (req, res) => {
+router.get("/teacher/verifyEmail/:token", teacherController.signUpEmailVerify, (req, res) => {
   res.status(200).send("fine");
 
 });
